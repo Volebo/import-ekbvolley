@@ -1,4 +1,6 @@
-"use strict";
+/* globals casper: false */
+
+'use strict';
 
 var
 	expect = require('chai').expect,
