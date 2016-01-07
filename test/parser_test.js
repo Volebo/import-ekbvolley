@@ -1,92 +1,65 @@
 "use strict";
 
 var
-	_ = require('lodash'),
-	casper = require('casper').create(
-		{ verbose: true, logLevel : "debug" }
-	),
-	utils = require('utils'),
-	fs = require('fs'),
+	expect = require('chai').expect,
 	$ = require('jquery'),
-
-	parser = require('./parser')
+	chai = require('chai')
 ;
+chai.use(require('chai-datetime'));
 
+describe('parser', function() {
 
-/* serialize cyclic */
-function str(obj){
-	var seen = [];
-	var _seen = _(seen);
-	
-	var res = JSON.stringify(obj, function(key, val) {
-		if (val != null && typeof val == "object") {
-			if (_seen.includes(val)) {
-				return;
-			}
-			seen.push(val);
-		}
-		return val;
+	before(function(){
+		casper.start();
 	});
-	seen = null;
-	return res;
-}
-/* serialize cyclic */
 
 
+	describe('parseLineWithResult', function () {
+		
+		var tests = [
+			//04.12.2015. 20:00. УКС-ГРУПП — ИВРОМ ТРЕЙД  3:0  [УГМУ] СУДЬЯ: █ САУЛЯК А.В.
+			{
+				html : '<p class="font_8"><span style="font-size:14px;"><span style="font-size:14px;"><span style="text-decoration:underline;"><a dataquery="#textLink_ihyoear8"><span style="font-size:14px;"><span style="font-size:14px;"><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;">04.12.2015. 20:00.&nbsp;</span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif; font-weight: bold;">УКС-ГРУПП — <span style="font-weight:bold"><span style="font-weight:bold">ИВРОМ ТРЕЙД &nbsp;3:0</span></span></span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;"><span style="font-weight:bold;">&nbsp;&nbsp;</span>[</span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif; font-weight: bold;"><span class="color_34">УГМУ</span></span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;">] СУДЬЯ: <span class="color_28">█&nbsp;</span>САУЛЯК А.В.</span></span></span></a></span></span></span></p>'
+				, dt : new Date(Date.UTC(2015, 11, 4, 15, 0, 0))
+				, teamA : 'УКС-ГРУПП'
+				, link_id : 'textLink_ihyoear8'
+			},
 
-var url = "http://www.ekbvolley.com";
-// url = "http://www.ekbvolley.com/#!-2015-2016--/cwov";
-var crawl = _([
-	{ id: 'cwov', name : '', suf:'#!-2015-2016--/cwov', tour : 11 },
-	//{ id: 'pnis6', name : '' },
-]);
+			// 10.10.2015. 18:00. ЛОКОМОТИВ ИЗУМРУД - ЛИЦЕЙ № 180 — К ТЕЛЕКОМ  1:3  [ГАГАРИНА, 30] СУДЬЯ: САУЛЯК А.В.
+			{
+				html : '<p class="font_8"><span style="text-decoration:underline;"><a dataquery="#textLink_ih5tbxew"><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px;">10.10.2015. 18:00.&nbsp;</span><span style="font-weight:bold;">ЛОКОМОТИВ ИЗУМРУД&nbsp;-&nbsp;ЛИЦЕЙ № 180</span><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px; font-weight: bold;"> — </span><span style="font-weight:bold;">К ТЕЛЕКОМ &nbsp;1:3</span><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px;">&nbsp; [</span><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px; font-weight: bold;"><span class="color_34">ГАГАРИНА, 30</span></span><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px;">] СУДЬЯ: </span>САУЛЯК А.В.</a></span></p>'
+				, dt : new Date(Date.UTC(2015, 9, 10, 13, 0, 0))
+				, teamA : 'ЛОКОМОТИВ ИЗУМРУД - ЛИЦЕЙ № 180'
+				, link_id : 'textLink_ih5tbxew'
+			},
+		];
 
-casper.start(url, function() {
-	
-	var data = this.getGlobal('publicModel');
-	var ld = _(data.pageList.pages);
+		tests.forEach( function(data){
 
-	crawl = crawl
-		.map(function (pgd){
-			var f = ld.find('pageId', pgd.id);
-			if (f){
-				pgd.url = f.urls[0];
-				return pgd;
-			} else {
-				console.debug('INITIAL LOAD: not found:', pgd.id, _(pgd.name));
-				return null;
-			}
-		})
-		.compact();
-});
+			var state = { mode : 'played', played : [] };
+			var parser = require('../parser.js');
 
-casper.then( function x (){
-	crawl.forEach(function forEachCrawl(x){
-		casper.thenOpen( x.url, function openData(){
-			var raw = this.getPageContent();
-			var json = JSON.parse(raw);
-
-			var textNodeId = _.get(json, 'structure.components[0].dataQuery');
-			textNodeId = _.trimLeft(textNodeId, '#');
-
-			var text = json.data.document_data[textNodeId].text; // _.get(json, 'data.' + textNodeId + '.text')
-
-			var games = parser.parse(text);
-
-			var res = _(games.played)
-				.map( function (g) { return _(g).omit('raw'); } )
-				//.map( )
-				;
-
-			console.debug( str(res) );
-
-			//fs.write('text.log', text, 'w+');
-			//this.log( text );
-			//console.debug('json.data', utils.dump(json.data));
+			//var d = data; // (function(x){ return x;} )(data);			
+			var html = $('<p/>').html(data.html);
+			
+			var x = parser.parseLineWithResult(state, html);
+			
+			it('should not be an error', function () {
+				expect(x).to.not.have.property('error');
+			});
+			it('should has teamA', function () {
+				expect(x).to.have.property('teamA').to.equal(data.teamA);
+			});
+			it('should gather date', function () {
+				expect(x).to.have.property('dt').to.equalDate(data.dt).to.equalTime(data.dt);
+			});
+			it('should contain data link', function () {
+				expect(x).to.have.property('links').to.be.a('array');
+				expect(x.links).to.have.length.above(0);
+				expect(x.links[0]).to.have.property('id', data.link_id);
+			});
 
 		});
-	}).value();
+
+	});
 });
-
-casper.run();
-
