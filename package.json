@@ -13,8 +13,7 @@
     "test": "mocha --recursive  -R spec test/mocha/*.js && ./node_modules/mocha-casperjs/bin/mocha-casperjs test/mocha-casperjs/*.js",
     "start": "casperjs ./main.js"
   },
-  "config": {
-  },
+  "config": {},
   "dependencies": {
     "jquery": "^2.1.4",
     "lodash": "^3.10.1"
@@ -24,6 +23,7 @@
     "chai": "^3.4.1",
     "chai-datetime": "*",
     "coveralls": "^2.11.6",
+    "istanbul": "^0.4.1",
     "mocha": "*",
     "mocha-casperjs": "*",
     "mocha-lcov-reporter": "^1.0.0"
