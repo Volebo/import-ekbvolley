@@ -19,7 +19,7 @@
   var undefined;
 
 function getTimeZoneMs(){
-	return 5 * 60 * 60 * 1000; // 5 hours
+	return 5 * 60 * 60 * 1000; // YEKT : 5 hours
 }
 
 function trim(s){
