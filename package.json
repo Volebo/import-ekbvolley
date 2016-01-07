@@ -10,7 +10,7 @@
     "url": "https://github.com/VoleboNet/import-ekbvolley.git"
   },
   "scripts": {
-    "test": "./node_modules/mocha-casperjs/bin/mocha-casperjs",
+    "test": "mocha --recursive  -R spec test/mocha/*.js && ./node_modules/mocha-casperjs/bin/mocha-casperjs test/mocha-casperjs/*.js",
     "start": "casperjs ./main.js"
   },
   "config": {

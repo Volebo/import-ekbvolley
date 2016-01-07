@@ -45,7 +45,7 @@ describe('parser', function() {
 		tests.forEach( function(data){
 
 			var state = { mode : 'played', played : [] };
-			var parser = require('../parser.js');
+			var parser = require('../../parser.js');
 
 			var html = $('<p/>').html(data.html);
 			
