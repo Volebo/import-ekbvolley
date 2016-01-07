@@ -16,8 +16,6 @@
 	}
 })(this, function parser_factory($){
 
-  var undefined;
-
 function getTimeZoneMs(){
 	return 5 * 60 * 60 * 1000; // YEKT : 5 hours
 }
@@ -70,7 +68,7 @@ function parse (html)
 		cancelled : state.cancelled,
 	};
 	//fs.write('text.log', text, 'w+');
-};
+}
 
 function parseLine(state, e)
 {
@@ -104,10 +102,10 @@ function parseLineWithCancel(state, e){
 	game.raw = e;
 	game.text = t;
 
-	var m;
-	if (m = t.match(
+	var m = t.match(
 		/(\d+)\.(\d+)\.(\d{4}).+?(\d+):(\d+)[\.\s]+([-№а-яё\(\)\w\s\d]+?(?:\[F\])?)(?:\s+[-—]\s+)([-№а-яё\(\)\w\s\d]+(?:\[F\])?)\s*\[([-№,\.\(\)а-яё\w\d\s]+)\]\s*СУДЬЯ:([█\s]*)([-\?,\.а-яё\s]+)\s*\(\s*ОТМЕНЕНА\s*\)/i
-		))
+		);
+	if (m)
 	{
 		var ms = Date.UTC(m[3], parseInt(m[2])-1, m[1], m[4], m[5], 0);
 		ms -= getTimeZoneMs();
@@ -144,7 +142,7 @@ function parseLineWithCancel(state, e){
 		};
 
 		console.error(eee.comment, eee);
-	};
+	}
 
 	return game;
 }
@@ -157,10 +155,10 @@ function parseLineWithResult(state, e){
 	game.raw = e;
 	game.text = t;
 
-	var m;
-	if (m = t.match(
+	var m = t.match(
 		/(\d+)\.(\d+)\.(\d{4}).+?(\d+):(\d+)[\.\s]+([-№а-яё\(\)\w\s\d]+?(?:\[F\])?)(?:\s+[-—]\s+)([-№а-яё\(\)\w\s\d]+(?:\[F\])?)\s*(\d:\d)\s*\[([-№,\.\(\)а-яё\w\d\s]+)\]\s*СУДЬЯ:([█\s]*)([-,\.а-яё\s]+)/i
-		))
+	);
+	if (m)
 	{
 		var ms = Date.UTC(m[3], parseInt(m[2])-1, m[1], m[4], m[5], 0);
 		ms -= getTimeZoneMs();
@@ -195,7 +193,7 @@ function parseLineWithResult(state, e){
 			lid = lid.replace(/^#/, '');
 		} else {
 			lid = null;
-		};
+		}
 
 		game.links = [ {id : lid} ];
 
@@ -207,7 +205,7 @@ function parseLineWithResult(state, e){
 		};
 
 		//console.error(eee.comment, eee);
-	};
+	}
 
 	return game;
 }

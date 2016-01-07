@@ -19,7 +19,7 @@ function str(obj){
 	var _seen = _(seen);
 	
 	var res = JSON.stringify(obj, function(key, val) {
-		if (val != null && typeof val == "object") {
+		if (val !== null && typeof val == "object") {
 			if (_seen.includes(val)) {
 				return;
 			}

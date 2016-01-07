@@ -13,6 +13,12 @@ describe('parser', function() {
 		casper.start();
 	});
 
+	after(function(){
+		// TODO : gather coverage !!!! 
+		var x = casper.page.evaluate(function() {
+			return __coverage__;
+		});
+	});
 
 	describe('parseLineWithResult', function () {
 		
@@ -39,7 +45,6 @@ describe('parser', function() {
 			var state = { mode : 'played', played : [] };
 			var parser = require('../parser.js');
 
-			//var d = data; // (function(x){ return x;} )(data);			
 			var html = $('<p/>').html(data.html);
 			
 			var x = parser.parseLineWithResult(state, html);
