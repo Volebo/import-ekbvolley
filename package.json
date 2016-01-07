@@ -1,0 +1,23 @@
+{
+  "name": "volebonet-import-ekbvolley",
+  "version": "0.1.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "./node_modules/mocha-casperjs/bin/mocha-casperjs test/test.js",
+    "start": "casperjs ./main.js"
+  },
+  "author": "Koryukov Maksim",
+  "license": "private property for awhile",
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "casper-chai": "*",
+    "chai": "*",
+    "chai-datetime": "*",
+    "mocha": "*",
+    "mocha-casperjs": "*"
+  }
+}
