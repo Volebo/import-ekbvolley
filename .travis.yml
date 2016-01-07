@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - "5.3"
+# temporary, since 'travis cant find tests..'  - "5.3"
   - "4.1"
   - "0.11"
   - "iojs"
