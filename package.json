@@ -10,7 +10,7 @@
     "url": "https://github.com/VoleboNet/import-ekbvolley.git"
   },
   "scripts": {
-    "test": "./node_modules/mocha-casperjs/bin/mocha-casperjs test/",
+    "test": "./node_modules/mocha-casperjs/bin/mocha-casperjs",
     "start": "casperjs ./main.js"
   },
   "config": {
