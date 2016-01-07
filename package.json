@@ -2,22 +2,30 @@
   "name": "volebonet-import-ekbvolley",
   "version": "0.1.0",
   "description": "",
+  "author": "Koryukov Maksim",
+  "license": "MIT",
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VoleboNet/import-ekbvolley.git"
+  },
   "scripts": {
-    "test": "./node_modules/mocha-casperjs/bin/mocha-casperjs test/test.js",
+    "test": "./node_modules/mocha-casperjs/bin/mocha-casperjs test/",
     "start": "casperjs ./main.js"
   },
-  "author": "Koryukov Maksim",
-  "license": "private property for awhile",
+  "config": {
+  },
   "dependencies": {
     "jquery": "^2.1.4",
     "lodash": "^3.10.1"
   },
   "devDependencies": {
     "casper-chai": "*",
-    "chai": "*",
+    "chai": "^3.4.1",
     "chai-datetime": "*",
+    "coveralls": "^2.11.6",
     "mocha": "*",
-    "mocha-casperjs": "*"
+    "mocha-casperjs": "*",
+    "mocha-lcov-reporter": "^1.0.0"
   }
 }
