@@ -10,7 +10,4 @@ matrix:
       env: SENDCOVERAGE=1
 
 after_script:
-  - if [ $SENDCOVERAGE1 ]; then ./coverage-calc.sh; ./coverage-send.sh; rm -rf ./coverage; fi
-  - ./coverage-calc.sh
-  - ./coverage-send.sh
-  - rm -rf ./coverage
+  - if [ $SENDCOVERAGE ]; then ./coverage-calc.sh; ./coverage-send.sh && rm -rf ./coverage; fi
