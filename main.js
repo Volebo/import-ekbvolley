@@ -52,23 +52,28 @@ jsdom.env({
 
 	done: function (err, window) {
 
-		var data = window.publicModel;
-		var ld = _(data.pageList.pages);
+		if (err){
+			console.error(err);
+		} else
+		{
+			var data = window.publicModel;
+			var ld = _(data.pageList.pages);
 
-		crawl = crawl
-			.map(function (pgd){
-				var f = ld.find('pageId', pgd.id);
-				if (f){
-					pgd.url = f.urls[0];
-					return pgd;
-				} else {
-					console.log('INITIAL LOAD: not found:', pgd.id, _(pgd.name));
-					return null;
-				}
-			})
-			.compact();
+			crawl = crawl
+				.map(function (pgd){
+					var f = ld.find('pageId', pgd.id);
+					if (f){
+						pgd.url = f.urls[0];
+						return pgd;
+					} else {
+						console.log('INITIAL LOAD: not found:', pgd.id, _(pgd.name));
+						return null;
+					}
+				})
+				.compact();
 
-		processCrawlData(crawl);
+			processCrawlData(crawl);
+		}
 	}
 });
 
@@ -101,7 +106,7 @@ var processCrawlData = function(crawl)
 
 			} else {
 				console.error( 'resp error : ', response.statusCode, 'error :', error);
-			};
+			}
 		});
 	}).value();
 };
