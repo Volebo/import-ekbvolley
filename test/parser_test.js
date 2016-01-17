@@ -20,7 +20,8 @@ describe('parser', function() {
 				dt : new Date(Date.UTC(2015, 11, 4, 15, 0, 0)),
 				teamA : 'УКС-ГРУПП',
 				referee : 'САУЛЯК А.В.',
-				link_id : 'textLink_ihyoear8'
+				referee_note_exists : true,
+				link_id : 'textLink_ihyoear8',
 			},
 
 			// 10.10.2015. 18:00. ЛОКОМОТИВ ИЗУМРУД - ЛИЦЕЙ № 180 — К ТЕЛЕКОМ  1:3  [ГАГАРИНА, 30] СУДЬЯ: САУЛЯК А.В.
@@ -29,6 +30,7 @@ describe('parser', function() {
 				dt : new Date(Date.UTC(2015, 9, 10, 13, 0, 0)),
 				teamA : 'ЛОКОМОТИВ ИЗУМРУД - ЛИЦЕЙ № 180',
 				referee : 'САУЛЯК А.В.',
+				referee_note_exists : false,
 				link_id : 'textLink_ih5tbxew'
 			},
 
@@ -39,6 +41,7 @@ describe('parser', function() {
 				dt : new Date(Date.UTC(2015, 11, 21, 15, 0, 0)),
 				teamA : 'УРГУПС-1 [F]',
 				referee : 'БОВДУЙ А.В.',
+				referee_note_exists : false,
 				link_id : null
 			},
 		];
@@ -63,6 +66,9 @@ describe('parser', function() {
 			});
 			it('should contain referee', function () {
 				expect(x).to.have.property('referee').to.equal(data.referee);
+			});
+			it('should contain referee_note_exists', function () {
+				expect(x).to.have.property('referee_note_exists').to.equal(data.referee_note_exists);
 			});
 			it('should contain data link', function () {
 				expect(x).to.have.property('links').to.be.a('array');
