@@ -1,17 +1,20 @@
 language: node_js
 
 node_js:
-  - "0.12"
-  - "iojs"
+    - "0.12"
+    - "iojs"
 
 matrix:
-  include:
-    - node_js: "5.3"
-      env: SENDCOVERAGE=1
+    include:
+        - node_js: "5.3"
+            env: SENDCOVERAGE=1
 
 after_script:
-  - if [ $SENDCOVERAGE ]; then
-    ./coverage-calc.sh;
-    ./coverage-send.sh;
-    rm -rf ./coverage;
-   fi
+    - if [ $SENDCOVERAGE ]; then
+        ./coverage-calc.sh;
+        ./coverage-send.sh;
+        rm -rf ./coverage;
+    fi
+    - ./coverage-calc.sh
+    - ./coverage-send.sh
+    - rm -rf ./coverage
