@@ -111,6 +111,44 @@ function parseLine(state, e)
 	}
 }
 
+/* internal, so it have many params */
+function commonGameData(game, Y, M, D, h, m, t1, t2, gym, ref, rn){
+
+	Y = parseInt(Y);
+	M = parseInt(M)-1;
+	D = parseInt(D);
+	h = parseInt(h);
+	m = parseInt(m);
+
+	var ms = Date.UTC(Y, M, D, h, m, 0);
+	ms -= getTimeZoneMs();
+	game.dt = new Date(ms);
+
+	game.teamA = fixBlank(trim(t1));
+	game.teamB = fixBlank(trim(t2));
+
+	game.gym = fixBlank(trim(gym));
+	var rn = trim(rn);
+	game.referee = fixBlank(trim(ref));
+
+	var rne = false;
+	if (rn){
+		/*
+		// TODO : do you really need this code: 
+		var dbg = [];
+		for (var c=0; c < rn.length; c++ ){
+			dbg.push(rn.charCodeAt(c));
+		}
+		*/
+		rne = true;
+	}
+	
+	game.referee_note = rn;
+	game.referee_note_exists = rne;
+
+	return game;
+}
+
 function parseLineWithCancel(state, e){
 	var t = $(e).text();
 
@@ -124,32 +162,13 @@ function parseLineWithCancel(state, e){
 		);
 	if (m)
 	{
-		var ms = Date.UTC(m[3], parseInt(m[2])-1, m[1], m[4], m[5], 0);
-		ms -= getTimeZoneMs();
-		game.dt = new Date(ms);
-
-		game.teamA = fixBlank(trim(m[6]));
-		game.teamB = fixBlank(trim(m[7]));
-
-		game.score = null; // raw
-
-		game.gym = fixBlank(trim(m[8]));
-		var rn = trim(m[9]);
-		game.referee = fixBlank(trim(m[10]));
-
-		var rne = false;
-		if (rn){
-			var dbg = [];
-
-			for (var c=0; c < rn.length; c++ ){
-				dbg.push(rn.charCodeAt(c));
-			}
-
-			rne = true;
-		}
-		
-		game.referee_note = rn;
-		game.referee_note_exists = rne;
+		commonGameData(game, m[3], m[2], m[1], m[4], m[5],	// dt
+			m[6], m[7], // teams
+			m[8],	// gym
+			m[10],	// ref
+			m[9]	// rn
+		);
+		game.score = null;
 
 		//console.debug(dt, game.teamA, game.teamB, game.score, gym, referee_note_exists, referee);
 	} else {
@@ -177,32 +196,13 @@ function parseLineWithResult(state, e){
 	);
 	if (m)
 	{
-		var ms = Date.UTC(m[3], parseInt(m[2])-1, m[1], m[4], m[5], 0);
-		ms -= getTimeZoneMs();
-		game.dt = new Date(ms);
-
-		game.teamA = fixBlank(trim(m[6]));
-		game.teamB = fixBlank(trim(m[7]));
-
+		commonGameData(game, m[3], m[2], m[1], m[4], m[5],	// dt
+			m[6], m[7], // teams
+			m[9],	// gym
+			m[11],	// ref
+			m[10]	// rn
+		);
 		game.score = parseScore(trim(m[8])); // raw
-
-		game.gym = fixBlank(trim(m[9]));
-		var rn = trim(m[10]);
-		game.referee = fixBlank(trim(m[11]));
-
-		var rne = false;
-		if (rn){
-			var dbg = [];
-
-			for (var c=0; c < rn.length; c++ ){
-				dbg.push(rn.charCodeAt(c));
-			}
-
-			rne = true;
-		}
-		
-		game.referee_note = rn;
-		game.referee_note_exists = rne;
 
 		// game protocol link id:
 		var lid = $(e).find('a[dataquery]').attr('dataquery');
