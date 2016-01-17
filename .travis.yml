@@ -9,7 +9,7 @@ matrix:
     - node_js: "5.3"
       env: SENDCOVERAGE=1
 
-before_deploy:
+after_script:
   - if [ $SENDCOVERAGE ]; then
     ./coverage-calc.sh;
     ./coverage-send.sh;
