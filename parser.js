@@ -112,7 +112,7 @@ function parseLine(state, e)
 }
 
 /* internal, so it have many params */
-function commonGameData(game, Y, M, D, h, m, t1, t2, gym, ref, rn){
+function commonGameData(game, Y, M, D, h, m, t1, t2, gym, ref, rnote){
 
 	Y = parseInt(Y);
 	M = parseInt(M)-1;
@@ -128,7 +128,7 @@ function commonGameData(game, Y, M, D, h, m, t1, t2, gym, ref, rn){
 	game.teamB = fixBlank(trim(t2));
 
 	game.gym = fixBlank(trim(gym));
-	var rn = trim(rn);
+	var rn = trim(rnote);
 	game.referee = fixBlank(trim(ref));
 
 	var rne = false;
