@@ -5,12 +5,14 @@ cache:
   - node_modules
 
 node_js:
-  - "stable"
-  - "iojs"
+  - stable
+  - iojs
 
 matrix:
+  allow_failures:
+    - node_js: iojs
   include:
-    - node_js: "5.3"
+    - node_js: 5.3
       env: SENDCOVERAGE=1
 
 after_script:
