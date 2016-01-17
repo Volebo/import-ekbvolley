@@ -19,6 +19,7 @@ describe('parser', function() {
 				html : '<p class="font_8"><span style="font-size:14px;"><span style="font-size:14px;"><span style="text-decoration:underline;"><a dataquery="#textLink_ihyoear8"><span style="font-size:14px;"><span style="font-size:14px;"><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;">04.12.2015. 20:00.&nbsp;</span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif; font-weight: bold;">УКС-ГРУПП — <span style="font-weight:bold"><span style="font-weight:bold">ИВРОМ ТРЕЙД &nbsp;3:0</span></span></span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;"><span style="font-weight:bold;">&nbsp;&nbsp;</span>[</span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif; font-weight: bold;"><span class="color_34">УГМУ</span></span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;">] СУДЬЯ: <span class="color_28">█&nbsp;</span>САУЛЯК А.В.</span></span></span></a></span></span></span></p>',
 				dt : new Date(Date.UTC(2015, 11, 4, 15, 0, 0)),
 				teamA : 'УКС-ГРУПП',
+				referee : 'САУЛЯК А.В.',
 				link_id : 'textLink_ihyoear8'
 			},
 
@@ -27,7 +28,18 @@ describe('parser', function() {
 				html : '<p class="font_8"><span style="text-decoration:underline;"><a dataquery="#textLink_ih5tbxew"><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px;">10.10.2015. 18:00.&nbsp;</span><span style="font-weight:bold;">ЛОКОМОТИВ ИЗУМРУД&nbsp;-&nbsp;ЛИЦЕЙ № 180</span><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px; font-weight: bold;"> — </span><span style="font-weight:bold;">К ТЕЛЕКОМ &nbsp;1:3</span><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px;">&nbsp; [</span><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px; font-weight: bold;"><span class="color_34">ГАГАРИНА, 30</span></span><span style="font-family: helvetica-w01-roman,helvetica-w02-roman,helvetica-lt-w10-roman,sans-serif; font-size: 14px;">] СУДЬЯ: </span>САУЛЯК А.В.</a></span></p>',
 				dt : new Date(Date.UTC(2015, 9, 10, 13, 0, 0)),
 				teamA : 'ЛОКОМОТИВ ИЗУМРУД - ЛИЦЕЙ № 180',
+				referee : 'САУЛЯК А.В.',
 				link_id : 'textLink_ih5tbxew'
+			},
+
+			//
+			// 21.12.2015. 20:00. УРГУПС-1 [F] — ЕТТУ-1 [F]  3:0  [УРГУПС] СУДЬЯ: БОВДУЙ А.В.
+			{
+				html : '<p class="font_8">21.12.2015. 20:00. <span style="font-weight:bold;">УРГУПС-1<span style="font-weight:bold">&nbsp;[F] </span>— <span style="font-weight:bold"><span style="font-weight:bold"><span style="font-weight:bold"><span style="font-weight:bold"><span style="font-weight:bold">ЕТТУ-1&nbsp;<span style="font-weight:bold">[F] &nbsp;3:0</span></span></span></span></span></span>&nbsp;&nbsp;</span>[<span style="font-weight:bold;"><span class="color_34">УРГУПС</span></span>] СУДЬЯ: БОВДУЙ А.В.</p>',
+				dt : new Date(Date.UTC(2015, 11, 21, 15, 0, 0)),
+				teamA : 'УРГУПС-1 [F]',
+				referee : 'БОВДУЙ А.В.',
+				link_id : null
 			},
 		];
 
@@ -48,6 +60,9 @@ describe('parser', function() {
 			});
 			it('should gather date', function () {
 				expect(x).to.have.property('dt').to.equalDate(data.dt).to.equalTime(data.dt);
+			});
+			it('should contain referee', function () {
+				expect(x).to.have.property('referee').to.equal(data.referee);
 			});
 			it('should contain data link', function () {
 				expect(x).to.have.property('links').to.be.a('array');
@@ -97,6 +112,16 @@ describe('parser', function() {
 
 	describe('.parseScore', function () {
 		
+		var parser = require('../parser.js');
+
+		[null, '', 'a:b', '5:'].forEach( function(data){	
+			var x = parser.parseScore(data);
+
+			it('shoud return null (format mismatch)', function () {
+				expect(x).to.be.null;
+			});
+		});
+
 		var tests = [
 			{
 				str : '1  : 0',
@@ -117,7 +142,6 @@ describe('parser', function() {
 		];
 		
 		tests.forEach( function(data){	
-			var parser = require('../parser.js');
 			var x = parser.parseScore(data.str);
 			
 			it('should not be an error', function () {

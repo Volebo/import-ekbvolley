@@ -37,6 +37,12 @@ function trim(s){
 	return s.replace(/\s+$/, '').replace(/^\s+/, '');
 }
 
+function fixBlank(s){
+	if (!s)
+		return s;
+	return s.replace(/\s+/, ' ');
+}
+
 /** Waits for a HTML-chunk with information about games 
 */
 function parse (html)
@@ -122,14 +128,14 @@ function parseLineWithCancel(state, e){
 		ms -= getTimeZoneMs();
 		game.dt = new Date(ms);
 
-		game.teamA = trim(m[6]);
-		game.teamB = trim(m[7]);
+		game.teamA = fixBlank(trim(m[6]));
+		game.teamB = fixBlank(trim(m[7]));
 
 		game.score = null; // raw
 
-		game.gym = trim(m[8]);
+		game.gym = fixBlank(trim(m[8]));
 		var rn = trim(m[9]);
-		game.referee = trim(m[10]);
+		game.referee = fixBlank(trim(m[10]));
 
 		var rne = false;
 		if (rn){
@@ -175,14 +181,14 @@ function parseLineWithResult(state, e){
 		ms -= getTimeZoneMs();
 		game.dt = new Date(ms);
 
-		game.teamA = trim(m[6]);
-		game.teamB = trim(m[7]);
+		game.teamA = fixBlank(trim(m[6]));
+		game.teamB = fixBlank(trim(m[7]));
 
 		game.score = parseScore(trim(m[8])); // raw
 
-		game.gym = trim(m[9]);
+		game.gym = fixBlank(trim(m[9]));
 		var rn = trim(m[10]);
-		game.referee = trim(m[11]);
+		game.referee = fixBlank(trim(m[11]));
 
 		var rne = false;
 		if (rn){
@@ -222,6 +228,9 @@ function parseLineWithResult(state, e){
 }
 
 function parseScore(s){
+	if (null == s)
+		return null;
+
 	var m;
 	m = s.match(/\s*(\d+)\s*:\s*(\d+)\s*/i);
 
