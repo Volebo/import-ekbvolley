@@ -11,10 +11,7 @@ chai.use(require('chai-datetime'));
 
 describe('parser', function() {
 
-	before(function(){
-	});
-
-	describe('parseLineWithResult', function () {
+	describe('.parseLineWithResult', function () {
 		
 		var tests = [
 			//04.12.2015. 20:00. УКС-ГРУПП — ИВРОМ ТРЕЙД  3:0  [УГМУ] СУДЬЯ: █ САУЛЯК А.В.
@@ -58,6 +55,85 @@ describe('parser', function() {
 				expect(x.links[0]).to.have.property('id', data.link_id);
 			});
 
+		});
+
+	});
+
+
+	describe('.parseLineWithCancel', function () {
+		
+		var tests = [
+			// 11.11.2015. 19:30. УРГЮУ — ЕТТУ-1 [F]  [ГИМНАЗИЯ № 47] СУДЬЯ: КОПЕЛЕВ Б.И. (ОТМЕНЕНА)
+			{
+				html : '<p class="font_8"><span class="color_17">11.11.2015. 19:30. <span style="font-weight:bold;">УРГЮУ — <span style="font-weight:bold"><span style="font-weight:bold"><span style="font-weight:bold">ЕТТУ-1&nbsp;<span style="font-weight:bold">[F]</span></span></span></span></span>&nbsp; [<span style="font-weight:bold;">ГИМНАЗИЯ № 47</span>] СУДЬЯ: КОПЕЛЕВ Б.И. (ОТМЕНЕНА)</span></p>',
+				dt : new Date(Date.UTC(2015, 10, 11, 14, 30, 0)),
+				teamA : 'УРГЮУ',
+			},
+		];
+
+		tests.forEach( function(data){
+
+			var state = { mode : 'cancelled', cancelled : [] };
+			var parser = require('../parser.js');
+
+			var html = $('<p/>').html(data.html);
+			
+			var x = parser.parseLineWithCancel(state, html);
+			
+			it('should not be an error', function () {
+				expect(x).to.not.have.property('error');
+			});
+			it('should has teamA', function () {
+				expect(x).to.have.property('teamA').to.equal(data.teamA);
+			});
+			it('should gather date', function () {
+				expect(x).to.have.property('dt').to.equalDate(data.dt).to.equalTime(data.dt);
+			});
+
+		});
+
+	});
+
+
+	describe('.parseScore', function () {
+		
+		var tests = [
+			{
+				str : '1  : 0',
+				s : [1, 0]
+			},
+			{
+				str : '5:2',
+				s : [5, 2]
+			},
+			{
+				str : '3:1',
+				s : [3, 1]
+			},
+			{
+				str : '2:3',
+				s : [2, 3]
+			},
+		];
+		
+		tests.forEach( function(data){	
+			var parser = require('../parser.js');
+			var x = parser.parseScore(data.str);
+			
+			it('should not be an error', function () {
+				expect(x).to.not.have.property('error');
+			});
+			it('should has teamA', function () {
+				expect(x).to.be.a('array');
+			});
+
+			it('is of two elements', function() {
+				expect(x).to.have.length(2);
+			});
+
+			it('correct score', function() {
+				expect(x).to.eql(data.s);
+			});
 		});
 
 	});

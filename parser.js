@@ -89,8 +89,7 @@ function parseLine(state, e)
 	switch(state.mode)
 	{
 		case 'anounce':
-			// TODO : print!
-			//console.warn('anounce is not parsed >>>', e);
+			console.warn('anounce is not parsed >>>', $(e).text());
 		break;
 		case 'cancelled':
 			var g = parseLineWithCancel(state, e);
@@ -101,8 +100,7 @@ function parseLine(state, e)
 			state.played.push(game);
 		break;
 		case 'annotation':
-			// TODO : print!
-			//console.warn('annotation is not parsed >>>', e);
+			console.warn('annotation is not parsed >>>', $(e).text());
 		break;
 	}
 }
@@ -112,7 +110,7 @@ function parseLineWithCancel(state, e){
 
 	var game = {};
 
-	game.raw = e;
+	game.raw = $(e).html();
 	game.text = t;
 
 	var m = t.match(
@@ -151,7 +149,7 @@ function parseLineWithCancel(state, e){
 	} else {
 		var eee = game.error = {
 			comment : 'could not parse cancelled',
-			raw : e,
+			raw : game.raw,
 		};
 
 		console.error(eee.comment, eee);
@@ -165,7 +163,7 @@ function parseLineWithResult(state, e){
 
 	var game = {};
 
-	game.raw = e;
+	game.raw = $(e).html();
 	game.text = t;
 
 	var m = t.match(
@@ -214,7 +212,7 @@ function parseLineWithResult(state, e){
 	} else {
 		var eee = game.error = {
 			comment : 'could not parse played',
-			raw : e,
+			raw : game.raw,
 		};
 
 		//console.error(eee.comment, eee);
@@ -243,6 +241,8 @@ exports.parse = parse;
 
 /* IF TEST */
 exports.parseLineWithResult = parseLineWithResult;
+exports.parseLineWithCancel = parseLineWithCancel;
+exports.parseScore = parseScore;
 /* END IF */
 
 

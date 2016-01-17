@@ -54,6 +54,7 @@ jsdom.env({
 
 		if (err){
 			console.error(err);
+			return err;
 		} else
 		{
 			var data = window.publicModel;
@@ -73,6 +74,8 @@ jsdom.env({
 				.compact();
 
 			processCrawlData(crawl);
+
+			return 0;
 		}
 	}
 });
