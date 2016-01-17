@@ -10,7 +10,7 @@ describe('trash', function() {
 	
 	describe('trim', function() {
 	
-		var trash = require('../../trash.js');
+		var trash = require('../trash.js');
 		it('should return empty', function () {
 			var x = trash.trim(null);
 			expect(x).to.be.null;

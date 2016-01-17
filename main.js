@@ -2,12 +2,9 @@
 
 var
 	_ = require('lodash'),
-	casper = require('casper').create(
-		{ verbose: true, logLevel : "debug" }
-	),
-	utils = require('utils'),
+	jsdom = require('jsdom'),
+	request = require('request'),
 	fs = require('fs'),
-	$ = require('jquery'),
 
 	parser = require('./parser')
 ;
@@ -33,60 +30,78 @@ function str(obj){
 /* serialize cyclic */
 
 
-
 var url = "http://www.ekbvolley.com";
-// url = "http://www.ekbvolley.com/#!-2015-2016--/cwov";
+
 var crawl = _([
 	{ id: 'cwov', name : '', suf:'#!-2015-2016--/cwov', tour : 11 },
 	//{ id: 'pnis6', name : '' },
 ]);
 
-casper.start(url, function() {
-	
-	var data = this.getGlobal('publicModel');
-	var ld = _(data.pageList.pages);
 
-	crawl = crawl
-		.map(function (pgd){
-			var f = ld.find('pageId', pgd.id);
-			if (f){
-				pgd.url = f.urls[0];
-				return pgd;
-			} else {
-				console.debug('INITIAL LOAD: not found:', pgd.id, _(pgd.name));
-				return null;
-			}
-		})
-		.compact();
+jsdom.env({
+	url: url,
+	scripts: ["http://code.jquery.com/jquery.js"],
+
+	/* empty node required */
+	features: {
+	//FetchExternalResources: ["script"],
+	//ProcessExternalResources: ["script"],
+	//SkipExternalResources: false,
+	//MutationEvents: '2.0',
+	},
+
+	done: function (err, window) {
+
+		var data = window.publicModel;
+		var ld = _(data.pageList.pages);
+
+		crawl = crawl
+			.map(function (pgd){
+				var f = ld.find('pageId', pgd.id);
+				if (f){
+					pgd.url = f.urls[0];
+					return pgd;
+				} else {
+					console.log('INITIAL LOAD: not found:', pgd.id, _(pgd.name));
+					return null;
+				}
+			})
+			.compact();
+
+		processCrawlData(crawl);
+	}
 });
 
-casper.then( function x (){
+var processCrawlData = function(crawl)
+{
 	crawl.forEach(function forEachCrawl(x){
-		casper.thenOpen( x.url, function openData(){
-			var raw = this.getPageContent();
-			var json = JSON.parse(raw);
 
-			var textNodeId = _.get(json, 'structure.components[0].dataQuery');
-			textNodeId = _.trimLeft(textNodeId, '#');
+		request(x.url, function parseRequestOfSecondStep(error, response, body){
+			if (!error && response.statusCode == 200)
+			{
+				var raw = body;
+				var json = JSON.parse(raw);
 
-			var text = json.data.document_data[textNodeId].text; // _.get(json, 'data.' + textNodeId + '.text')
+				var textNodeId = _.get(json, 'structure.components[0].dataQuery');
+				textNodeId = _.trimLeft(textNodeId, '#');
 
-			var games = parser.parse(text);
+				var text = json.data.document_data[textNodeId].text; // _.get(json, 'data.' + textNodeId + '.text')
 
-			var res = _(games.played)
-				.map( function (g) { return _(g).omit('raw'); } )
-				//.map( )
-				;
+				var games = parser.parse(text);
 
-			console.debug( str(res) );
+				var res = _(games.played)
+					.map( function (g) { return _(g).omit('raw'); } )
+					//.map( )
+					;
 
-			//fs.write('text.log', text, 'w+');
-			//this.log( text );
-			//console.debug('json.data', utils.dump(json.data));
+				console.log( str(res) );
+				//fs.write('text.log', text, 'w+');
+				//this.log( text );
+				//console.debug('json.data', utils.dump(json.data));
 
+			} else {
+				console.error( 'resp error : ', response.statusCode, 'error :', error);
+			};
 		});
 	}).value();
-});
-
-casper.run();
-
+};

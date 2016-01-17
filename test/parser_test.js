@@ -4,7 +4,7 @@
 
 var
 	expect = require('chai').expect,
-	$ = require('jquery'),
+	$ = require('cheerio'),
 	chai = require('chai')
 ;
 chai.use(require('chai-datetime'));
@@ -12,14 +12,6 @@ chai.use(require('chai-datetime'));
 describe('parser', function() {
 
 	before(function(){
-		casper.start();
-	});
-
-	after(function(){
-		// TODO : gather coverage !!!! 
-		var x = casper.page.evaluate(function() {
-			return __coverage__;
-		});
 	});
 
 	describe('parseLineWithResult', function () {
@@ -45,7 +37,7 @@ describe('parser', function() {
 		tests.forEach( function(data){
 
 			var state = { mode : 'played', played : [] };
-			var parser = require('../../parser.js');
+			var parser = require('../parser.js');
 
 			var html = $('<p/>').html(data.html);
 			

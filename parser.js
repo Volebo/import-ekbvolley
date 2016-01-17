@@ -1,23 +1,34 @@
-"use strict";
+;"use strict";
 
-;(function parser_load(self, factory) {
+/*
+ * LOADER BLOCK
+ */
+(function parser_load(self, factory) {
 	if (typeof define === 'function' && define.amd) {
 		// AMD
-		define(['jquery'], factory);
+		define(['cheerio'], factory);
 	} else if (typeof exports === 'object') {
 		// Node, CommonJS-like
 		module.exports = factory(
-			require('jquery')
+			require('cheerio')
 		);
 	} else {
 		// Browser globals (self is window)
 		var parser = factory(self.jQuery);
 		self.parser = parser;
 	}
-})(this, function parser_factory($){
+})
+
+/*
+ * / LOADER BLOCK
+ */
+
+(this, function parser_factory($){
+
+
 
 function getTimeZoneMs(){
-	return 5 * 60 * 60 * 1000; // YEKT : 5 hours
+	return 5 * 60 * 60 * 1000; // Ekb volley uses YEKT : +5 hours
 }
 
 function trim(s){
@@ -55,7 +66,7 @@ function parse (html)
 		} else {
 		
 			if ( t.match(/^\s*$/) ){
-				console.debug('skip empty');
+				console.log('skip empty');
 			} else {
 				// data anylysis
 				parseLine(state, e);
@@ -78,7 +89,8 @@ function parseLine(state, e)
 	switch(state.mode)
 	{
 		case 'anounce':
-			console.warn('anounce is not parsed >>>', e);
+			// TODO : print!
+			//console.warn('anounce is not parsed >>>', e);
 		break;
 		case 'cancelled':
 			var g = parseLineWithCancel(state, e);
@@ -89,7 +101,8 @@ function parseLine(state, e)
 			state.played.push(game);
 		break;
 		case 'annotation':
-			console.warn('annotation is not parsed >>>', e);
+			// TODO : print!
+			//console.warn('annotation is not parsed >>>', e);
 		break;
 	}
 }
