@@ -58,11 +58,11 @@ jsdom.env({
 		} else
 		{
 			var data = window.publicModel;
-			var ld = _(data.pageList.pages);
+			var _pages = _(data.pageList.pages);
 
 			crawl = crawl
 				.map(function (pgd){
-					var f = ld.find('pageId', pgd.id);
+					var f = _pages.find('pageId', pgd.id);
 					if (f){
 						pgd.url = f.urls[0];
 						return pgd;
