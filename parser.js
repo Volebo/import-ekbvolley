@@ -1,4 +1,4 @@
-;"use strict";
+"use strict";
 
 /*
  * LOADER BLOCK
@@ -228,7 +228,7 @@ function parseLineWithResult(state, e){
 }
 
 function parseScore(s){
-	if (null == s)
+	if (!s)
 		return null;
 
 	var m;
