@@ -1,13 +1,13 @@
 {
-  "name": "volebonet-import-ekbvolley",
+  "name": "volebo-import-ekbvolley",
   "version": "0.2.0",
-  "description": "",
+  "description": "Keep volebo.net in sync with ekbvolley.com",
   "author": "Koryukov Maksim",
   "license": "MIT",
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/VoleboNet/import-ekbvolley.git"
+    "url": "https://github.com/volebo/import-ekbvolley.git"
   },
   "scripts": {
     "test": "mocha --recursive -R spec test/*.js",
