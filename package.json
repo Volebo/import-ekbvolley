@@ -1,6 +1,6 @@
 {
   "name": "volebo-import-ekbvolley",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Keep volebo.net in sync with ekbvolley.com",
   "main": "main.js",
   "repository": {
