@@ -1,19 +1,47 @@
+# Sync volebo.net with ekbvolley.com
+
+# Copyright (C) 2016  Volebo <volebo.net@gmail.com>
+# Copyright (C) 2016  Koryukov Maksim <maxkoryukov@gmail.com>
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the MIT License, attached to this software package.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+# You should have received a copy of the MIT License along with this
+# program. If not, see <https://opensource.org/licenses/MIT>.
+
+# http://spdx.org/licenses/MIT
+
+sudo: false
+
 language: node_js
+
+node_js:
+  - 4
+  - 6
+
+# env:
+#  global:
+#    - NODE_ENV=dev
+
+# matrix:
+#  allow_failures:
+#    - node_js: 4
 
 cache:
   directories:
   - node_modules
 
-node_js:
-  - stable
-  - iojs
+install:
+  - npm install
+  - npm install -g codecov
 
-matrix:
-  allow_failures:
-    - node_js: iojs
-  include:
-    - node_js: 5.3
-      env: SENDCOVERAGE=1
+script:
+  - npm run lint
+  - npm run coverage
 
-after_script:
-  - if [ $SENDCOVERAGE ]; then ./coverage-calc.sh; ./coverage-send.sh && rm -rf ./coverage; fi
+after_success:
+  - codecov

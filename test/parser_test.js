@@ -1,4 +1,21 @@
-/* globals casper: false */
+/*
+Sync volebo.net with ekbvolley.com
+
+Copyright (C) 2016  Volebo <volebo.net@gmail.com>
+Copyright (C) 2016  Koryukov Maksim <maxkoryukov@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the MIT License, attached to this software package.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+You should have received a copy of the MIT License along with this
+program. If not, see <https://opensource.org/licenses/MIT>.
+
+http://spdx.org/licenses/MIT
+*/
 
 'use strict';
 
@@ -6,13 +23,13 @@ var
 	expect = require('chai').expect,
 	$ = require('cheerio'),
 	chai = require('chai')
-;
+	;
 chai.use(require('chai-datetime'));
 
 describe('parser', function() {
 
 	describe('.parseLineWithResult', function () {
-		
+
 		var tests = [
 			//04.12.2015. 20:00. УКС-ГРУПП — ИВРОМ ТРЕЙД  3:0  [УГМУ] СУДЬЯ: █ САУЛЯК А.В.
 			{
@@ -55,9 +72,9 @@ describe('parser', function() {
 			var parser = require('../parser.js');
 
 			var html = $('<p/>').html(data.html);
-			
+
 			var x = parser.parseLineWithResult(state, html);
-			
+
 			it('should not be an error', function () {
 				expect(x).to.not.have.property('error');
 			});
@@ -88,7 +105,7 @@ describe('parser', function() {
 
 
 	describe('.parseLineWithCancel', function () {
-		
+
 		var tests = [
 			// 11.11.2015. 19:30. УРГЮУ — ЕТТУ-1 [F]  [ГИМНАЗИЯ № 47] СУДЬЯ: КОПЕЛЕВ Б.И. (ОТМЕНЕНА)
 			{
@@ -104,9 +121,9 @@ describe('parser', function() {
 			var parser = require('../parser.js');
 
 			var html = $('<p/>').html(data.html);
-			
+
 			var x = parser.parseLineWithCancel(state, html);
-			
+
 			it('should not be an error', function () {
 				expect(x).to.not.have.property('error');
 			});
@@ -123,10 +140,10 @@ describe('parser', function() {
 
 
 	describe('.parseScore', function () {
-		
+
 		var parser = require('../parser.js');
 
-		[null, '', 'a:b', '5:'].forEach( function(data){	
+		[null, '', 'a:b', '5:'].forEach( function(data){
 			var x = parser.parseScore(data);
 
 			it('shoud return null (format mismatch)', function () {
@@ -152,10 +169,10 @@ describe('parser', function() {
 				s : [2, 3]
 			},
 		];
-		
-		tests.forEach( function(data){	
+
+		tests.forEach( function(data){
 			var x = parser.parseScore(data.str);
-			
+
 			it('should not be an error', function () {
 				expect(x).to.not.have.property('error');
 			});

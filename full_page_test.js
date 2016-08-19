@@ -1,3 +1,22 @@
+/*
+Sync volebo.net with ekbvolley.com
+
+Copyright (C) 2016  Volebo <volebo.net@gmail.com>
+Copyright (C) 2016  Koryukov Maksim <maxkoryukov@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the MIT License, attached to this software package.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+You should have received a copy of the MIT License along with this
+program. If not, see <https://opensource.org/licenses/MIT>.
+
+http://spdx.org/licenses/MIT
+*/
+
 "use strict";
 
 var
@@ -5,11 +24,12 @@ var
 	casper = require('casper').create(
 		{ verbose: true, logLevel : "info" }
 	),
-	utils = require('utils'),
-	fs = require('fs'),
+	// utils = require('utils'),
+	// fs = require('fs'),
 	$ = require('jquery')
-;
+	;
 
+const debug           = require('debug')('volebo:import:ekbvolley:fulltest');
 
 var str = JSON.stringify;
 
@@ -21,7 +41,7 @@ var crawl = _([
 ]);
 /*
 casper.start(url, function() {
-	
+
 	var data = this.getGlobal('publicModel');
 	var ld = _(data.pageList.pages);
 
@@ -43,11 +63,11 @@ casper.start(url, function() {
 casper.start(url);
 
 crawl.forEach( function crawlEach( c ){
-	casper.thenOpen( url + c.suf , function crawEachThenOpen(re){
+	casper.thenOpen( url + c.suf , function crawEachThenOpen(/* re */){
 		var html = this.getPageContent();
 		var b = $('<body/>').html(html).contents();
 
-		console.log(str(b.find('span')));
+		debug(str(b.find('span')));
 	});
 }).value();
 

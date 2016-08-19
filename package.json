@@ -1,32 +1,68 @@
 {
   "name": "volebo-import-ekbvolley",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Keep volebo.net in sync with ekbvolley.com",
-  "author": "Koryukov Maksim",
-  "license": "MIT",
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/volebo/import-ekbvolley.git"
+    "url": "git+https://github.com/volebo/import-ekbvolley.git"
   },
   "scripts": {
-    "test": "mocha --recursive -R spec test/*.js",
-    "start": "nodejs main.js"
+    "start": "nodejs main.js",
+    "test": "`npm bin`/mocha",
+    "lint": "`npm bin`/eslint ./",
+    "coverage": "`npm bin`/istanbul cover `npm bin`/_mocha"
   },
+  "keywords": [
+    "import",
+    "sync",
+    "ekbvolley",
+    "ekbvolley.com",
+    "exchange",
+    "request",
+    "volebonet",
+    "volebo"
+  ],
+  "author": {
+    "name": "Volebo",
+    "url": "http://dev.volebo.net",
+    "email": "volebo.net@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "Koryukov Maksim",
+      "email": "maxkoryukov@gmail.com"
+    },
+    {
+      "name": "Volebo",
+      "url": "http://dev.volebo.net",
+      "email": "volebo.net@gmail.com"
+    }
+  ],
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=3.0.0"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/volebo/express-mw-lang/issues"
+  },
+  "homepage": "https://github.com/volebo/import-ekbvolley#readme",
   "config": {},
   "dependencies": {
-    "cheerio": "^0.19.0",
-    "jquery": "^2.1.4",
-    "jsdom": "^7.2.2",
-    "lodash": "^4.1.0",
-    "request": "^2.67.0"
+    "cheerio": "^0.20.x",
+    "debug": "^2.2.0",
+    "jquery": "^2.1.x",
+    "jsdom": "^9.4.x",
+    "lodash": "^4.15.x",
+    "request": "^2.74.0"
   },
   "devDependencies": {
-    "chai": "*",
-    "chai-datetime": "*",
-    "coveralls": "*",
-    "istanbul": "*",
-    "mocha": "*",
-    "mocha-lcov-reporter": "*"
+    "chai": "^3.x",
+    "chai-datetime": "^1.x",
+    "eslint-config-volebo": "^1.2.1",
+    "istanbul": "^0.4.x",
+    "mocha": "^3.x",
+    "mocha-lcov-reporter": "^1.x"
   }
 }
