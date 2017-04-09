@@ -17,24 +17,21 @@ program. If not, see <https://opensource.org/licenses/MIT>.
 http://spdx.org/licenses/MIT
 */
 
-"use strict";
+'use strict'
 
-var
-	_ = require('lodash'),
-	jsdom = require('jsdom'),
-	request = require('request'),
+const debug   = require('debug')('volebo:import:ekbvolley:main')
+const _       = require('lodash')
+const jsdom   = require('jsdom')
+const request = require('request')
+const parser  = require('./parser')
 
-	parser = require('./parser')
-	;
-
-const debug           = require('debug')('volebo:import:ekbvolley:main');
 
 /* serialize cyclic */
 function str(obj){
-	var seen = [];
-	var _seen = _(seen);
+	let seen = [];
+	const _seen = _(seen);
 
-	var res = JSON.stringify(obj, function(key, val) {
+	const res = JSON.stringify(obj, function(_unused__key, val) {
 		if (val && (typeof val === "object")) {
 			if (_seen.includes(val)) {
 				return;
@@ -49,31 +46,31 @@ function str(obj){
 /* serialize cyclic */
 
 
-var url = "http://www.ekbvolley.com";
+const url = "http://www.ekbvolley.com";
 
-var crawl = _([
+let crawl = _([
 	{ id: 'cwov', name : '', suf:'#!-2015-2016--/cwov', tour : 11 },
 	//{ id: 'pnis6', name : '' },
 ]);
 
-var processCrawlData = function(crawl)
+const processCrawlData = function(crawl)
 {
 	crawl.forEach(function forEachCrawl(x){
 
 		request(x.url, function parseRequestOfSecondStep(error, response, body){
 			if (!error && response.statusCode === 200)
 			{
-				var raw = body;
-				var json = JSON.parse(raw);
+				const raw = body;
+				const json = JSON.parse(raw);
 
-				var textNodeId = _.get(json, 'structure.components[0].dataQuery');
+				let textNodeId = _.get(json, 'structure.components[0].dataQuery');
 				textNodeId = _.trimLeft(textNodeId, '#');
 
-				var text = json.data.document_data[textNodeId].text; // _.get(json, 'data.' + textNodeId + '.text')
+				const text = json.data.document_data[textNodeId].text; // _.get(json, 'data.' + textNodeId + '.text')
 
-				var games = parser.parse(text);
+				const games = parser.parse(text);
 
-				var res = _(games.played)
+				const res = _(games.played)
 					.map( function (g) { return _(g).omit('raw'); } )
 					//.map( )
 					;
@@ -109,12 +106,12 @@ jsdom.env({
 			return err;
 		} else
 		{
-			var data = window.publicModel;
-			var _pages = _(data.pageList.pages);
+			const data = window.publicModel;
+			const _pages = _(data.pageList.pages);
 
 			crawl = crawl
 				.map(function (pgd){
-					var f = _pages.find('pageId', pgd.id);
+					const f = _pages.find('pageId', pgd.id);
 					if (f){
 						pgd.url = f.urls[0];
 						return pgd;

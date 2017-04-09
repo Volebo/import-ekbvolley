@@ -17,28 +17,31 @@ program. If not, see <https://opensource.org/licenses/MIT>.
 http://spdx.org/licenses/MIT
 */
 
-"use strict";
+'use strict'
 
-var
-	_ = require('lodash'),
-	casper = require('casper').create(
-		{ verbose: true, logLevel : "info" }
-	),
-	// utils = require('utils'),
-	// fs = require('fs'),
-	$ = require('jquery')
-	;
+const debug     = require('debug')('volebo:import:ekbvolley:fulltest');
+const _         = require('lodash')
+const casperPkg = require('casper')
+const $         = require('jquery')
+// utils = require('utils')
+// fs = require('fs')
 
-const debug           = require('debug')('volebo:import:ekbvolley:fulltest');
 
-var str = JSON.stringify;
 
-var url = "http://www.ekbvolley.com";
+const str = JSON.stringify;
+
+const url = "http://www.ekbvolley.com";
 // url = "http://www.ekbvolley.com/#!-2015-2016--/cwov";
-var crawl = _([
+const crawl = _([
 	{ id: 'cwov', name : '', suf:'#!-2015-2016--/cwov', tour : 11 },
 	//{ id: 'pnis6', name : '' },
 ]);
+
+const casper = casperPkg.create({
+	verbose: true,
+	logLevel : "info"
+})
+
 /*
 casper.start(url, function() {
 
@@ -64,8 +67,8 @@ casper.start(url);
 
 crawl.forEach( function crawlEach( c ){
 	casper.thenOpen( url + c.suf , function crawEachThenOpen(/* re */){
-		var html = this.getPageContent();
-		var b = $('<body/>').html(html).contents();
+		const html = this.getPageContent();
+		const b = $('<body/>').html(html).contents();
 
 		debug(str(b.find('span')));
 	});

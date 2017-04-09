@@ -19,18 +19,17 @@ http://spdx.org/licenses/MIT
 
 'use strict';
 
-var
-	expect = require('chai').expect,
-	$ = require('cheerio'),
-	chai = require('chai')
-	;
+const expect = require('chai').expect
+const $      = require('cheerio')
+const chai   = require('chai')
+
 chai.use(require('chai-datetime'));
 
 describe('parser', function() {
 
 	describe('.parseLineWithResult', function () {
 
-		var tests = [
+		const tests = [
 			//04.12.2015. 20:00. УКС-ГРУПП — ИВРОМ ТРЕЙД  3:0  [УГМУ] СУДЬЯ: █ САУЛЯК А.В.
 			{
 				html : '<p class="font_8"><span style="font-size:14px;"><span style="font-size:14px;"><span style="text-decoration:underline;"><a dataquery="#textLink_ihyoear8"><span style="font-size:14px;"><span style="font-size:14px;"><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;">04.12.2015. 20:00.&nbsp;</span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif; font-weight: bold;">УКС-ГРУПП — <span style="font-weight:bold"><span style="font-weight:bold">ИВРОМ ТРЕЙД &nbsp;3:0</span></span></span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;"><span style="font-weight:bold;">&nbsp;&nbsp;</span>[</span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif; font-weight: bold;"><span class="color_34">УГМУ</span></span><span style="font-family: helvetica-w01-roman, helvetica-w02-roman, helvetica-lt-w10-roman, sans-serif;">] СУДЬЯ: <span class="color_28">█&nbsp;</span>САУЛЯК А.В.</span></span></span></a></span></span></span></p>',
@@ -68,12 +67,12 @@ describe('parser', function() {
 
 		tests.forEach( function(data){
 
-			var state = { mode : 'played', played : [] };
-			var parser = require('../parser.js');
+			const state = { mode : 'played', played : [] };
+			const parser = require('../parser.js');
 
-			var html = $('<p/>').html(data.html);
+			const html = $('<p/>').html(data.html);
 
-			var x = parser.parseLineWithResult(state, html);
+			const x = parser.parseLineWithResult(state, html);
 
 			it('should not be an error', function () {
 				expect(x).to.not.have.property('error');
@@ -106,7 +105,7 @@ describe('parser', function() {
 
 	describe('.parseLineWithCancel', function () {
 
-		var tests = [
+		const tests = [
 			// 11.11.2015. 19:30. УРГЮУ — ЕТТУ-1 [F]  [ГИМНАЗИЯ № 47] СУДЬЯ: КОПЕЛЕВ Б.И. (ОТМЕНЕНА)
 			{
 				html : '<p class="font_8"><span class="color_17">11.11.2015. 19:30. <span style="font-weight:bold;">УРГЮУ — <span style="font-weight:bold"><span style="font-weight:bold"><span style="font-weight:bold">ЕТТУ-1&nbsp;<span style="font-weight:bold">[F]</span></span></span></span></span>&nbsp; [<span style="font-weight:bold;">ГИМНАЗИЯ № 47</span>] СУДЬЯ: КОПЕЛЕВ Б.И. (ОТМЕНЕНА)</span></p>',
@@ -117,12 +116,12 @@ describe('parser', function() {
 
 		tests.forEach( function(data){
 
-			var state = { mode : 'cancelled', cancelled : [] };
-			var parser = require('../parser.js');
+			const state = { mode : 'cancelled', cancelled : [] };
+			const parser = require('../parser.js');
 
-			var html = $('<p/>').html(data.html);
+			const html = $('<p/>').html(data.html);
 
-			var x = parser.parseLineWithCancel(state, html);
+			const x = parser.parseLineWithCancel(state, html);
 
 			it('should not be an error', function () {
 				expect(x).to.not.have.property('error');
@@ -141,17 +140,17 @@ describe('parser', function() {
 
 	describe('.parseScore', function () {
 
-		var parser = require('../parser.js');
+		const parser = require('../parser.js');
 
 		[null, '', 'a:b', '5:'].forEach( function(data){
-			var x = parser.parseScore(data);
+			const x = parser.parseScore(data);
 
 			it('shoud return null (format mismatch)', function () {
 				expect(x).to.be.null;
 			});
 		});
 
-		var tests = [
+		const tests = [
 			{
 				str : '1  : 0',
 				s : [1, 0]
@@ -171,7 +170,7 @@ describe('parser', function() {
 		];
 
 		tests.forEach( function(data){
-			var x = parser.parseScore(data.str);
+			const x = parser.parseScore(data.str);
 
 			it('should not be an error', function () {
 				expect(x).to.not.have.property('error');

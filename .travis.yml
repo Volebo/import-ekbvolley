@@ -34,6 +34,9 @@ cache:
   directories:
   - node_modules
 
+before_install:
+  - npm config set spin false
+
 install:
   - npm install
   - npm install -g codecov
@@ -43,7 +46,19 @@ script:
   - npm run lint
   - npm test
   - npm run coverage
+  - codecov
   - bithound check git@github.com:$TRAVIS_REPO_SLUG.git
 
-after_success:
-  - codecov
+deploy:
+  provider: npm
+  api_key:
+    secure: "S/A9UN46gr/xsmKmaKpwiwMtN8ESST5IhQkoaFn0kOB3+Xf9F3J5mirdm32rjc+BX1eR9DkgsOunclXIR3C48hos9N13aVpRdGORfzxT4coTPoW4XG1047AKIwwuWgzhhD7bjpi0vT/0G68XWQKLSb5RRQrcfbS0mhhkvjfzCpu4g2LGdbdXTiygjhsI0GUAGn45Fsk45uWvUUlgMTYYNRGwb+WBkNkbGwNOL5q7EEFTFqppXiqQJ/N1rSqVLf0j8gNTTVPonKuliB6o2OXzQugC8ZDKRibX/ihUKn4v/0DC1BnYBggek8U+XxlPZURTrX+6mbg4WYm8dB4x96EXET5ijl32s0xJ1KRtD4o7JT/vpIA74vS72BdqoSYp6hGS1ex1Do+oLP0FgBd0PQczGjlec9RjkSc1KRs+YqzUoM8RMjWGlsF5jrWMuFiKuhpMs0jAdIMcImyfrprJ2BjiJXwi3Uf+oobXuunuiy2qlCfYFRA4TDMJlGIVoBbFazE3MeSzJb3Uo86ySv+dS/0adlYKFb7riNOqVzwxyli3rsXGxD6jyLFU+QLV5taHY8TFuKo8Ne2yd3dLXMKWurzjVZGC+Yk8Q9nIkan3mKKmndwsdaF9UXL/TN4Ok2VH+R5xdpr1huqxYy7rLvYjyJ67zVVGHrfA/7QbY/HOjVtD4C0="
+  email: dev@volebo.net
+  on:
+    tags: true
+    node: 6
+    repo: volebo/import-ekbvolley
+
+after_deploy:
+  # Send notification to Slack:
+  - curl -sL https://raw.githubusercontent.com/volebo/dev/master/scripts/im/slack-publish.sh | bash -s -
